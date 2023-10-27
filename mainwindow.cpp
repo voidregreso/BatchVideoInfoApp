@@ -43,14 +43,21 @@ void MainWindow::setupUI()
     tableView->setSortingEnabled(true);
 
     processButton = new QPushButton("Process", this);
+    recursiveCheckBox = new QCheckBox("Recursive", this);
     progressBar = new QProgressBar(this);
     progressBar->setRange(0, 100);
     progressBar->setValue(0);
 
+    QHBoxLayout* bottomLayout = new QHBoxLayout();
+    
+    bottomLayout->addWidget(processButton);
+    bottomLayout->addWidget(recursiveCheckBox);
+
     QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
+
     mainLayout->addLayout(topLayout);
     mainLayout->addWidget(tableView);
-    mainLayout->addWidget(processButton);
+    mainLayout->addLayout(bottomLayout);
     mainLayout->addWidget(progressBar);
 
     connect(browseButton, &QPushButton::clicked, this, &MainWindow::browsePath);
@@ -66,6 +73,7 @@ void MainWindow::browsePath()
 void MainWindow::processVideos()
 {
     QString directory = pathLineEdit->text();
+    bool isRecursive = recursiveCheckBox->isChecked();
     if (directory.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Please select a directory.");
@@ -75,7 +83,7 @@ void MainWindow::processVideos()
     browseButton->setEnabled(false);
     processButton->setEnabled(false);
 
-    runScannerThread(directory.toStdString());
+    runScannerThread(directory.toStdString(), isRecursive);
 }
 
 void MainWindow::populateTable(const std::vector<VideoInfo>& videoList)
@@ -104,9 +112,9 @@ void MainWindow::on_progressChanged(double progress)
     progressBar->setValue(progress * 100);
 }
 
-void MainWindow::runScannerThread(const std::string& directory) {
-    QThread* scannerThread = QThread::create([this, directory]() {
-        std::vector<VideoInfo> videoList = scanner.TraverseVideos(directory);
+void MainWindow::runScannerThread(const std::string& directory, bool isRecursive) {
+    QThread* scannerThread = QThread::create([this, directory, isRecursive]() {
+        std::vector<VideoInfo> videoList = scanner.TraverseVideos(directory, isRecursive);
         emit this->populateTable(videoList);
         browseButton->setEnabled(true);
         processButton->setEnabled(true);

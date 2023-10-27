@@ -20,7 +20,7 @@ public:
     VideoScanner() {}
     ~VideoScanner() {}
 
-    std::vector<VideoInfo> TraverseVideos(const std::string& directory);
+    std::vector<VideoInfo> TraverseVideos(const std::string& directory, bool isRecursive);
 
 signals:
     void progressUpdated(double progress);

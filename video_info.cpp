@@ -20,12 +20,13 @@ int VideoScanner::CountSubfiles(const std::string& path) {
     return cnt;
 }
 
-std::vector<VideoInfo> VideoScanner::TraverseVideos(const std::string& directory) {
+std::vector<VideoInfo> VideoScanner::TraverseVideos(const std::string& directory, bool isRecursive) {
     std::vector<VideoInfo> videoList;
     QDir dir(QString::fromStdString(directory));
 
-    QDirIterator it(dir.absolutePath(), QDirIterator::Subdirectories);
-
+    QDirIterator it(dir.absolutePath(), 
+        isRecursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
+        
     int totalFiles = CountSubfiles(directory);
     int processedFiles = 0;
 
@@ -39,6 +40,7 @@ std::vector<VideoInfo> VideoScanner::TraverseVideos(const std::string& directory
     }
     return videoList;
 }
+
 
 
 bool VideoScanner::IsValidVideoFile(const std::string& path) {

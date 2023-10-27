@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QThread>
+#include <QCheckBox>
 #include <QHeaderView>
 #include "video_info.h"
 
@@ -28,12 +29,13 @@ private slots:
 
 private:
     void setupUI();
-    void runScannerThread(const std::string& directory);
+    void runScannerThread(const std::string& directory, bool isRecursive);
     void on_progressChanged(double progress);
 
     QLineEdit* pathLineEdit;
     QPushButton* browseButton;
     QPushButton* processButton;
+    QCheckBox* recursiveCheckBox;
     QTableView* tableView;
     QProgressBar* progressBar;
     VideoScanner scanner;
