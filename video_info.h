@@ -12,6 +12,7 @@ struct VideoInfo {
     double size;
     double ratio;
     int duration;
+    double frameRate;
 };
 
 class VideoScanner : public QObject {

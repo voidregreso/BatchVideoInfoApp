@@ -87,6 +87,8 @@ void VideoScanner::GetVideoInfo(const std::wstring& path, std::vector<VideoInfo>
     double size = static_cast<double>(QFileInfo(QString::fromStdWString(path)).size()) / (1024.0 * 1024.0);
     double ratio = (bitrate > 0.0) ? (size * size / bitrate) : 0.0;
     int duration = static_cast<int>(pFormatCtx->duration / AV_TIME_BASE);
+    AVRational frameRateRational = pFormatCtx->streams[videoStream]->avg_frame_rate;
+    double frameRate = av_q2d(frameRateRational);
 
     VideoInfo videoInfo;
     videoInfo.path = realpath;
@@ -95,6 +97,7 @@ void VideoScanner::GetVideoInfo(const std::wstring& path, std::vector<VideoInfo>
     videoInfo.size = size;
     videoInfo.ratio = ratio;
     videoInfo.duration = (duration >= 0) ? duration : 0;
+    videoInfo.frameRate = frameRate;
 
     videoList.push_back(videoInfo);
     avformat_close_input(&pFormatCtx);

@@ -33,7 +33,7 @@ void MainWindow::setupUI()
 
     tableView = new QTableView(this);
     model = new QStandardItemModel(this);
-    headers << "Name" << "Size (MB)" << "Bitrate (Kbps)" << "Codec" << "Ratio" << "Duration";
+    headers << "Name" << "Size (MB)" << "Bitrate (Kbps)" << "Frame Rate (fps)" << "Codec" << "Ratio" << "Duration";
     model->setHorizontalHeaderLabels(headers);
     tableView->setModel(model);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -97,6 +97,7 @@ void MainWindow::populateTable(const std::vector<VideoInfo>& videoList)
         row << new QStandardItem(QString::fromStdString(video.path));
         row << new NumericStandardItem(QString::number(video.size));
         row << new NumericStandardItem(QString::number(video.bitrate));
+        row << new NumericStandardItem(QString::number(video.frameRate));
         row << new QStandardItem(QString::fromStdString(video.codec));
         row << new NumericStandardItem(QString::number(video.ratio));
         row << new QStandardItem(QTime::fromMSecsSinceStartOfDay(video.duration * 1000).toString());
